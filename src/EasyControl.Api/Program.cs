@@ -9,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
 CongurationInjectionDependency(builder);
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -46,8 +46,8 @@ app.Run();
 
 // 4º - Configuração - Adiciona Injeção de Dependências
 static void CongurationInjectionDependency(WebApplicationBuilder builder){
-    string? connectionString = builder.Configuration.GetConnectionString("ConnectionString");
-    builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient, ServiceLifetime.Transient);
+    string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnectionString");
+    builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
 
     builder.Services
     .AddSingleton(builder.Configuration)

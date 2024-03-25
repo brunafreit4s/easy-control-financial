@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EasyControl.Api.Domain.Models
 {
@@ -9,10 +10,12 @@ namespace EasyControl.Api.Domain.Models
         public long Id { get; set; }
 
         [Required(ErrorMessage = "O campo E-mail é de preenchimento obrigatório!")]        
+        [Column("Email")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O campo Senha é de preenchimento obrigatório!")]        
-        public string Senha { get; set; } = string.Empty;
+        [Column("Senha")]
+        public string Password { get; set; } = string.Empty;
 
         [Required]
         public DateTime DataCadastro { get; set; }
