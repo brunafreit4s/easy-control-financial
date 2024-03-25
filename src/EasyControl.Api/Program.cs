@@ -1,3 +1,7 @@
+using EasyControl.Api.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+CongurationInjectionDependency(builder);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -37,6 +43,16 @@ app.MapGet("/weatherforecast", () =>
 .WithOpenApi();
 
 app.Run();
+
+// 4º - Configuração - Adiciona Injeção de Dependências
+static void CongurationInjectionDependency(WebApplicationBuilder builder){
+    string? connectionString = builder.Configuration.GetConnectionString("ConnectionString");
+    builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient, ServiceLifetime.Transient);
+
+    builder.Services
+    .AddSingleton(builder.Configuration)
+    .AddSingleton(builder.Environment);
+}
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
