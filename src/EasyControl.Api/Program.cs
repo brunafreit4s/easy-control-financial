@@ -1,4 +1,6 @@
 using EasyControl.Api.Data;
+using EasyControl.Api.Domain.Repository.Classes;
+using EasyControl.Api.Domain.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -44,14 +46,18 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
-// 4º - Configuração - Adiciona Injeção de Dependências
-static void CongurationInjectionDependency(WebApplicationBuilder builder){
+// 4º - Configuração - Conexão com a base de dados           
+static void CongurationInjectionDependency(WebApplicationBuilder builder){    
     string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnectionString");
     builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
 
     builder.Services
     .AddSingleton(builder.Configuration)
-    .AddSingleton(builder.Environment);
+    .AddSingleton(builder.Environment)
+
+    #region Injeção de Dependência
+    .AddScoped<IUsuarioRepository, UsuarioRepository>();
+    #endregion
 }
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

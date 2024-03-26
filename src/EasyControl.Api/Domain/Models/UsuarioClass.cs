@@ -6,6 +6,7 @@ namespace EasyControl.Api.Domain.Models
     public class Usuario
     {
         // 1º - Configuração - Construir a classe modelo
+        // 1º - CRUD - Construir a classe modelo
         [Key]
         public long Id { get; set; }
 
