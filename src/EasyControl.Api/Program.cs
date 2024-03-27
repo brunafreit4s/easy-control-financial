@@ -46,8 +46,8 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
-// 4º - Configuração - Conexão com a base de dados           
 static void CongurationInjectionDependency(WebApplicationBuilder builder){    
+    // 4º - Configuração - Difinição da conexão com a base de dados           
     string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnectionString");
     builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
 

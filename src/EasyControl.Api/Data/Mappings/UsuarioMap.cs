@@ -7,7 +7,7 @@ namespace EasyControl.Api.Data.Mappings
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Usuario> builder)
         {
-            // 2º - Configuração - Definir como o Entity deve criar a tabela na base de dados
+            // 2º - Configuração - Criação do Map - Serve para definir como o Entity deve criar a tabela na base de dados
             builder.ToTable("Usuario").HasKey(p => p.Id);
             builder.Property(p => p.Email).HasColumnType("VARCHAR").IsRequired();
             builder.Property(p => p.Password).HasColumnType("VARCHAR").IsRequired();

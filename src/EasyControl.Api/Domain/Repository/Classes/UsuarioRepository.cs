@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyControl.Api.Domain.Repository.Classes
 {
-    // 2º - CRUD - Construir a classe Repository
+    // 7º - CRUD - Construir a classe Repository
     public class UsuarioRepository : IUsuarioRepository
     {
         #region Injeção de Dependência

@@ -2,7 +2,7 @@ using EasyControl.Api.Domain.Models;
 
 namespace EasyControl.Api.Domain.Repository.Interfaces
 {
-    // 2º - CRUD - Construir o Repository
+    // 8º - CRUD - Construir a Interface da entidade
     public interface IUsuarioRepository : IRepository<Usuario, long>
     {
         Task<Usuario?> GetByEmail(string email);

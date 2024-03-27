@@ -1,9 +1,10 @@
 
 namespace EasyControl.Api.Domain.Repository.Interfaces
 {
+    // 8º - CRUD - Construir a Interface base
+    // Todos os outros repositórios devem utilizar essa interface como base
     // T: Tipo de Entidade
     // I: Tipo de Identificador (ID)
-    // 2º - CRUD - Construir o Repository
     public interface IRepository<T, I> where T : class
     {
         Task<IEnumerable<T>> GetAll();
