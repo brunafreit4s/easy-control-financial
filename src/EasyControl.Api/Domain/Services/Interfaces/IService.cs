@@ -14,8 +14,8 @@ namespace EasyControl.Api.Domain.Services.Interfaces
     /// <typeparam name="I">Identificador (ID)</typeparam>
     public interface IService<RQ, RS, I> where RQ : class
     {
-        Task<IEnumerable<RS>> GetAll(I idUsuario);
-        Task<RS> GetById(I id, I idUsuario);
+        Task<IEnumerable<RS>> GetAll();
+        Task<RS> GetById(I id);
         Task<RS> Add(RQ entidade, I idUsuario);
         Task<RS> Update(I id, RQ entidade, I idUsuario);
         Task Delete(I id, I idUsuario);

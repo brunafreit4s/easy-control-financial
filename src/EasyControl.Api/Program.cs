@@ -1,3 +1,5 @@
+using AutoMapper;
+using EasyControl.Api.AutoMapper;
 using EasyControl.Api.Data;
 using EasyControl.Api.Domain.Repository.Classes;
 using EasyControl.Api.Domain.Repository.Interfaces;
@@ -51,12 +53,20 @@ static void CongurationInjectionDependency(WebApplicationBuilder builder){
     string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnectionString");
     builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
 
+    #region Configurações AutoMapper
+    var config = new MapperConfiguration(cfg => {
+        cfg.AddProfile<UsuarioProfile>();
+    });
+
+    IMapper mapper = config.CreateMapper();
+    #endregion
+
+    #region Injeção de Dependência
     builder.Services
     .AddSingleton(builder.Configuration)
     .AddSingleton(builder.Environment)
-
-    #region Injeção de Dependência
-    .AddScoped<IUsuarioRepository, UsuarioRepository>();
+    .AddSingleton(mapper)
+    .AddScoped<IUsuarioRepository, UsuarioRepository>();    
     #endregion
 }
 
