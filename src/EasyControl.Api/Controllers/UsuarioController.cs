@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyControl.Api.Contract.Usuario;
@@ -25,6 +26,7 @@ namespace EasyControl.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Add(UsuarioRequestContract contract){
+            //return Created("", "Entrou nessa poha");
             try{
                 return Created("", await _usuarioService.Add(contract, 0));
             }

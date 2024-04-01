@@ -47,7 +47,8 @@ namespace EasyControl.Api.Domain.Services.Classes
         {
             //Verificar como será feito com idUsuario (não entendi até o momento)
             var usuario = await _usuarioRepository.GetAll();
-            return _mapper.Map<IEnumerable<UsuarioResponseContract>>(usuario);
+            //return _mapper.Map<IEnumerable<UsuarioResponseContract>>(usuario);
+            return usuario.Select(usuario => _mapper.Map<UsuarioResponseContract>(usuario));
         }
 
         public async Task<UsuarioResponseContract> GetByEmail(string email)

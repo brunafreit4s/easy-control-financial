@@ -3,6 +3,8 @@ using EasyControl.Api.AutoMapper;
 using EasyControl.Api.Data;
 using EasyControl.Api.Domain.Repository.Classes;
 using EasyControl.Api.Domain.Repository.Interfaces;
+using EasyControl.Api.Domain.Services.Classes;
+using EasyControl.Api.Domain.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -12,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add controllers to the container
 builder.Services.AddControllers();
 
 CongurationInjectionDependency(builder);
@@ -26,6 +30,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Add MapControllers
+app.MapControllers();
 
 var summaries = new[]
 {
@@ -66,8 +73,9 @@ static void CongurationInjectionDependency(WebApplicationBuilder builder){
     builder.Services
     .AddSingleton(builder.Configuration)
     .AddSingleton(builder.Environment)
-    .AddSingleton(mapper)
-    .AddScoped<IUsuarioRepository, UsuarioRepository>();    
+    .AddSingleton(mapper)    
+    .AddScoped<IUsuarioRepository, UsuarioRepository>()   
+    .AddScoped<IUsuarioService, UsuarioService>();    
     #endregion
 }
 
