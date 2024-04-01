@@ -14,7 +14,7 @@ namespace EasyControl.Api.Domain.Services.Classes
 {
     public class UsuarioService : IUsuarioService
     {
-        #region Injeção de Dependência
+        #region Construtor e Injeção de Dependência
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
 

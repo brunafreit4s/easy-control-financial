@@ -8,7 +8,7 @@ namespace EasyControl.Api.Domain.Repository.Classes
     // 7º - CRUD - Construir a classe Repository
     public class UsuarioRepository : IUsuarioRepository
     {
-        #region Injeção de Dependência
+        #region Construtor e Injeção de Dependência
         private readonly ApplicationContext _contexto;
 
         public UsuarioRepository(ApplicationContext contexto){
