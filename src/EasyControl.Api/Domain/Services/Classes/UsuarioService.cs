@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using EasyControl.Api.Contract.Usuario;
 using EasyControl.Api.Domain.Models;
@@ -27,10 +23,12 @@ namespace EasyControl.Api.Domain.Services.Classes
         public async Task<UsuarioResponseContract> Add(UsuarioRequestContract entidade, long idUsuario)
         {
             var usuario = _mapper.Map<Usuario>(entidade);
-            usuario = await _usuarioRepository.Add(usuario);
             usuario.Password = GenerateHashPassword(usuario.Password);
+            usuario.DataCadastro = DateTime.Now;
+            usuario = await _usuarioRepository.Add(usuario);
+
             return _mapper.Map<UsuarioResponseContract>(usuario);
-        }        
+        }
 
         public Task<UsuarioLoginResponseContract> Authenticate(UsuarioLoginRequestContract usuarioLoginRequestContract)
         {
@@ -69,7 +67,8 @@ namespace EasyControl.Api.Domain.Services.Classes
 
             var usuario = _mapper.Map<Usuario>(entidade);
             usuario.Id = id;
-            usuario.Password = GenerateHashPassword(entidade.Senha);
+            usuario.Password = GenerateHashPassword(entidade.Password);
+            usuario.DataCadastro = DateTime.Now;
             usuario = await _usuarioRepository.Update(usuario);
             return _mapper.Map<UsuarioResponseContract>(usuario);
         }
@@ -81,7 +80,7 @@ namespace EasyControl.Api.Domain.Services.Classes
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(password);
                 byte[] bytesHash = sha256.ComputeHash(bytes);
-                hashPassword = BitConverter.ToString(bytesHash).ToLower();
+                hashPassword = BitConverter.ToString(bytesHash).Replace("-", "").Replace("-", "").ToLower();
             }
             return hashPassword;
         }

@@ -34,8 +34,9 @@ namespace EasyControl.Api.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("DataCadastro");
 
-                    b.Property<byte[]>("DataInativacao")
-                        .HasColumnType("timestamp");
+                    b.Property<DateTime?>("DataInativacao")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("DataInativacao");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -44,7 +45,7 @@ namespace EasyControl.Api.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnType("VARCHAR(MAX)")
                         .HasColumnName("Senha");
 
                     b.HasKey("Id");

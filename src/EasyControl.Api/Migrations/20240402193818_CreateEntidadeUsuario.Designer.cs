@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyControl.Api.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240325220641_CriarEntidadeUsuario")]
-    partial class CriarEntidadeUsuario
+    [Migration("20240402193818_CreateEntidadeUsuario")]
+    partial class CreateEntidadeUsuario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,17 +37,18 @@ namespace EasyControl.Api.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("DataCadastro");
 
-                    b.Property<byte[]>("DataInativacao")
-                        .HasColumnType("timestamp");
+                    b.Property<DateTime?>("DataInativacao")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("DataInativacao");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("Email");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("VARCHAR(MAX)")
                         .HasColumnName("Senha");
 
                     b.HasKey("Id");
