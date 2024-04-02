@@ -67,9 +67,8 @@ namespace EasyControl.Api.Domain.Services.Classes
 
             var usuario = _mapper.Map<Usuario>(entidade);
             usuario.Id = id;
-            usuario.Password = GenerateHashPassword(entidade.Password);
-            usuario.DataCadastro = DateTime.Now;
-            usuario = await _usuarioRepository.Update(usuario);
+            usuario.Password = GenerateHashPassword(entidade.Password);         
+            usuario = await _usuarioRepository.Update(usuario);                        
             return _mapper.Map<UsuarioResponseContract>(usuario);
         }
 

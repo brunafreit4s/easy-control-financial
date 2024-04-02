@@ -43,7 +43,7 @@ namespace EasyControl.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id}", Name = "GetById")]
         [AllowAnonymous]
         public async Task<IActionResult> GetById(long id){
             try{
@@ -56,7 +56,7 @@ namespace EasyControl.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{email}")]
+        [Route("email/{email}", Name = "GetByEmail")]
         [AllowAnonymous]
         public async Task<IActionResult> GetByEmail(string email){
             try{
