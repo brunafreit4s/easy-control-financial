@@ -34,19 +34,26 @@ namespace EasyControl.Api.Domain.Repository.Classes
 
         public async Task<IEnumerable<Usuario>> GetAll()
         {
-            return await _contexto.Usuario.AsNoTracking().OrderBy(u => u.Id).ToListAsync();
+            return await _contexto.Usuario
+                .AsNoTracking()
+                .OrderBy(u => u.Id)
+                .ToListAsync();
         }
 
         public async Task<Usuario?> GetByEmail(string email)
         {
-            return await _contexto.Usuario.AsNoTracking()
-                .Where(u => u.Email == email).FirstOrDefaultAsync();
+            return await _contexto.Usuario
+                .AsNoTracking()
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Usuario?> GetById(long id)
         {
-            return await _contexto.Usuario.AsNoTracking()
-                .Where(u => u.Id == id).FirstOrDefaultAsync();
+            return await _contexto.Usuario
+                .AsNoTracking()
+                .Where(u => u.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Usuario> Update(Usuario entidade)

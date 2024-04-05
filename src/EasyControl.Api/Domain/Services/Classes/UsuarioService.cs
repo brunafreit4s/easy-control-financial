@@ -58,7 +58,6 @@ namespace EasyControl.Api.Domain.Services.Classes
 
         public async Task<IEnumerable<UsuarioResponseContract>> GetAll()
         {
-            //Verificar como será feito com idUsuario (não entendi até o momento)
             var usuario = await _usuarioRepository.GetAll();
             //return _mapper.Map<IEnumerable<UsuarioResponseContract>>(usuario);
             return usuario.Select(usuario => _mapper.Map<UsuarioResponseContract>(usuario));
