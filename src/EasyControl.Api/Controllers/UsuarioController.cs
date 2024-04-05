@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using EasyControl.Api.Contract.Usuario;
 using EasyControl.Api.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,10 @@ namespace EasyControl.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authenticar(UsuarioLoginRequestContract contract){
             try{
-                return Created("", await _usuarioService.Authenticate(contract));
+                return Ok(await _usuarioService.Authenticate(contract));
+            }
+            catch(AuthenticationException ex){
+                return Unauthorized(new { StatusCode = 401, message = ex.Message});
             }
             catch(Exception ex){
                 return Problem(ex.Message);
@@ -32,7 +36,8 @@ namespace EasyControl.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Add(UsuarioRequestContract contract){
             try{
                 return Created("", await _usuarioService.Add(contract, 0));
@@ -83,7 +88,7 @@ namespace EasyControl.Api.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Update(long id, UsuarioRequestContract contract){
             try{
                 return Created("", await _usuarioService.Update(id, contract, 0));
@@ -96,7 +101,7 @@ namespace EasyControl.Api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Delete(long id){
             try{
                 await _usuarioService.Delete(id, 0);

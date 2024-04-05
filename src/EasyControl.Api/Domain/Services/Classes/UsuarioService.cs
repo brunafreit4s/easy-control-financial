@@ -2,7 +2,6 @@ using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
-using Azure.Identity;
 using EasyControl.Api.Contract.Usuario;
 using EasyControl.Api.Domain.Models;
 using EasyControl.Api.Domain.Repository.Interfaces;

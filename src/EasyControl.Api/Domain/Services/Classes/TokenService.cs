@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Text;
 using EasyControl.Api.Domain.Models;
@@ -19,14 +18,14 @@ namespace EasyControl.Api.Domain.Services.Classes
 
         public string GenerateToken(Usuario usuario){
             var tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(_configuration["KeySecret"]);
+            byte[] key = Encoding.UTF8.GetBytes(_configuration["KeySecret"]);
 
             var tokenDecriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] 
                 {
                     new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                    new Claim(ClaimTypes.NameIdentifier, usuario.Email),
+                    new Claim(ClaimTypes.Email, usuario.Email),
                 }),
                 
                 // Pega a data atual e adiciona mais a quantidades de horas definida
@@ -34,7 +33,7 @@ namespace EasyControl.Api.Domain.Services.Classes
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),                
             };            
 
-            var token = tokenHandler.CreateToken(tokenDecriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDecriptor);
             return tokenHandler.WriteToken(token);
         }
     }
