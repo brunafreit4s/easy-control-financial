@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Authentication;
 using EasyControl.Api.Contract.Usuario;
 using EasyControl.Api.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -24,9 +20,25 @@ namespace EasyControl.Api.Controllers
         #endregion
 
         [HttpPost]
+        [Route("/login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Authenticar(UsuarioLoginRequestContract contract){
+            try{
+                return Ok(await _usuarioService.Authenticate(contract));
+            }
+            catch(AuthenticationException ex){
+                return Unauthorized(new { StatusCode = 401, message = ex.Message});
+            }
+            catch(Exception ex){
+                return Problem(ex.Message);
+                //throw;
+            }
+        }
+
+        [HttpPost]
+        //[Authorize]
         [AllowAnonymous]
         public async Task<IActionResult> Add(UsuarioRequestContract contract){
-            //return Created("", "Entrou nessa poha");
             try{
                 return Created("", await _usuarioService.Add(contract, 0));
             }
@@ -49,7 +61,7 @@ namespace EasyControl.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id}", Name = "GetById")]
         [AllowAnonymous]
         public async Task<IActionResult> GetById(long id){
             try{
@@ -61,22 +73,22 @@ namespace EasyControl.Api.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("{email}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetByEmail(string email){
-            try{
-                return Ok(await _usuarioService.GetByEmail(email));
-            }
-            catch(Exception ex){
-                return Problem(ex.Message);
-                //throw;
-            }
-        }
+        // [HttpGet]
+        // [Route("email/{email}", Name = "GetByEmail")]
+        // [AllowAnonymous]
+        // public async Task<IActionResult> GetByEmail(string email){
+        //     try{
+        //         return Ok(await _usuarioService.GetByEmail(email));
+        //     }
+        //     catch(Exception ex){
+        //         return Problem(ex.Message);
+        //         //throw;
+        //     }
+        // }
 
         [HttpPut]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Update(long id, UsuarioRequestContract contract){
             try{
                 return Created("", await _usuarioService.Update(id, contract, 0));
@@ -89,7 +101,7 @@ namespace EasyControl.Api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Delete(long id){
             try{
                 await _usuarioService.Delete(id, 0);

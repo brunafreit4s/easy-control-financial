@@ -1,3 +1,4 @@
+using System.Text;
 using AutoMapper;
 using EasyControl.Api.AutoMapper;
 using EasyControl.Api.Data;
@@ -5,8 +6,10 @@ using EasyControl.Api.Domain.Repository.Classes;
 using EasyControl.Api.Domain.Repository.Interfaces;
 using EasyControl.Api.Domain.Services.Classes;
 using EasyControl.Api.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +21,8 @@ builder.Services.AddSwaggerGen();
 // Add controllers to the container
 builder.Services.AddControllers();
 
-CongurationInjectionDependency(builder);
+ConfigurationServices(builder);
+ConfigurationInjectionDependency(builder);
 
 var app = builder.Build();
 
@@ -56,7 +60,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
-static void CongurationInjectionDependency(WebApplicationBuilder builder){    
+static void ConfigurationInjectionDependency(WebApplicationBuilder builder){    
     // 4º - Configuração - Difinição da conexão com a base de dados           
     string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnectionString");
     builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
@@ -74,9 +78,70 @@ static void CongurationInjectionDependency(WebApplicationBuilder builder){
     .AddSingleton(builder.Configuration)
     .AddSingleton(builder.Environment)
     .AddSingleton(mapper)    
+    .AddScoped<TokenService>()
     .AddScoped<IUsuarioRepository, UsuarioRepository>()   
-    .AddScoped<IUsuarioService, UsuarioService>();    
+    .AddScoped<IUsuarioService, UsuarioService>();
     #endregion
+}
+
+// Configura o serviços da API.
+static void ConfigurationServices(WebApplicationBuilder builder)
+{
+
+    builder.Services
+    .AddCors()
+    .AddControllers().ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    }).AddNewtonsoftJson();
+
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description = "JTW Authorization header using the Beaerer scheme (Example: 'Bearer 12345abcdef')",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasyControl.Api", Version = "v1" });   
+    });
+
+    builder.Services.AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+
+    .AddJwtBearer(x =>
+    {
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["KeySecret"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 }
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

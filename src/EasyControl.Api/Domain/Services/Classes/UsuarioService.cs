@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using EasyControl.Api.Contract.Usuario;
 using EasyControl.Api.Domain.Models;
@@ -17,24 +14,40 @@ namespace EasyControl.Api.Domain.Services.Classes
         #region Construtor e Injeção de Dependência
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
+        private readonly TokenService _tokenService;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper){
+        public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper, TokenService tokenService){
             _usuarioRepository = usuarioRepository;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
         #endregion
 
         public async Task<UsuarioResponseContract> Add(UsuarioRequestContract entidade, long idUsuario)
         {
             var usuario = _mapper.Map<Usuario>(entidade);
-            usuario = await _usuarioRepository.Add(usuario);
             usuario.Password = GenerateHashPassword(usuario.Password);
-            return _mapper.Map<UsuarioResponseContract>(usuario);
-        }        
+            usuario.DataCadastro = DateTime.Now;
+            usuario = await _usuarioRepository.Add(usuario);
 
-        public Task<UsuarioLoginResponseContract> Authenticate(UsuarioLoginRequestContract usuarioLoginRequestContract)
+            return _mapper.Map<UsuarioResponseContract>(usuario);
+        }
+
+        public async Task<UsuarioLoginResponseContract> Authenticate(UsuarioLoginRequestContract usuarioLoginRequestContract)
         {
-            throw new NotImplementedException();
+            var usuario = await GetByEmail(usuarioLoginRequestContract.Email);
+            var hashPassword = GenerateHashPassword(usuarioLoginRequestContract.Password);
+
+            if(usuario is null || usuario.Password != hashPassword)
+            {
+                throw new AuthenticationException("Usuário ou Senha inválida!");
+            }
+
+            return new UsuarioLoginResponseContract{
+                Id = usuario.Id,
+                Email = usuario.Email,
+                Token = _tokenService.GenerateToken(_mapper.Map<Usuario>(usuario))
+            };
         }
 
         public async Task Delete(long id, long idUsuario)
@@ -69,8 +82,8 @@ namespace EasyControl.Api.Domain.Services.Classes
 
             var usuario = _mapper.Map<Usuario>(entidade);
             usuario.Id = id;
-            usuario.Password = GenerateHashPassword(entidade.Senha);
-            usuario = await _usuarioRepository.Update(usuario);
+            usuario.Password = GenerateHashPassword(entidade.Password);         
+            usuario = await _usuarioRepository.Update(usuario);                        
             return _mapper.Map<UsuarioResponseContract>(usuario);
         }
 
@@ -81,7 +94,7 @@ namespace EasyControl.Api.Domain.Services.Classes
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(password);
                 byte[] bytesHash = sha256.ComputeHash(bytes);
-                hashPassword = BitConverter.ToString(bytesHash).ToLower();
+                hashPassword = BitConverter.ToString(bytesHash).Replace("-", "").Replace("-", "").ToLower();
             }
             return hashPassword;
         }
