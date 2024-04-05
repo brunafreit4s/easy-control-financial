@@ -1,6 +1,8 @@
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
+using Azure.Identity;
 using EasyControl.Api.Contract.Usuario;
 using EasyControl.Api.Domain.Models;
 using EasyControl.Api.Domain.Repository.Interfaces;
@@ -13,10 +15,12 @@ namespace EasyControl.Api.Domain.Services.Classes
         #region Construtor e Injeção de Dependência
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
+        private readonly TokenService _tokenService;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper){
+        public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper, TokenService tokenService){
             _usuarioRepository = usuarioRepository;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
         #endregion
 
@@ -30,9 +34,21 @@ namespace EasyControl.Api.Domain.Services.Classes
             return _mapper.Map<UsuarioResponseContract>(usuario);
         }
 
-        public Task<UsuarioLoginResponseContract> Authenticate(UsuarioLoginRequestContract usuarioLoginRequestContract)
+        public async Task<UsuarioLoginResponseContract> Authenticate(UsuarioLoginRequestContract usuarioLoginRequestContract)
         {
-            throw new NotImplementedException();
+            var usuario = await GetByEmail(usuarioLoginRequestContract.Email);
+            var hashPassword = GenerateHashPassword(usuarioLoginRequestContract.Password);
+
+            if(usuario is null || usuario.Password != hashPassword)
+            {
+                throw new AuthenticationException("Usuário ou Senha inválida!");
+            }
+
+            return new UsuarioLoginResponseContract{
+                Id = usuario.Id,
+                Email = usuario.Email,
+                Token = _tokenService.GenerateToken(_mapper.Map<Usuario>(usuario))
+            };
         }
 
         public async Task Delete(long id, long idUsuario)

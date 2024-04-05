@@ -75,7 +75,8 @@ static void CongurationInjectionDependency(WebApplicationBuilder builder){
     .AddSingleton(builder.Environment)
     .AddSingleton(mapper)    
     .AddScoped<IUsuarioRepository, UsuarioRepository>()   
-    .AddScoped<IUsuarioService, UsuarioService>();    
+    .AddScoped<IUsuarioService, UsuarioService>()
+    .AddScoped<TokenService>();
     #endregion
 }
 

@@ -19,7 +19,20 @@ namespace EasyControl.Api.Controllers
         #endregion
 
         [HttpPost]
+        [Route("/login")]
         [AllowAnonymous]
+        public async Task<IActionResult> Authenticar(UsuarioLoginRequestContract contract){
+            try{
+                return Created("", await _usuarioService.Authenticate(contract));
+            }
+            catch(Exception ex){
+                return Problem(ex.Message);
+                //throw;
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Add(UsuarioRequestContract contract){
             try{
                 return Created("", await _usuarioService.Add(contract, 0));
@@ -55,18 +68,18 @@ namespace EasyControl.Api.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("email/{email}", Name = "GetByEmail")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetByEmail(string email){
-            try{
-                return Ok(await _usuarioService.GetByEmail(email));
-            }
-            catch(Exception ex){
-                return Problem(ex.Message);
-                //throw;
-            }
-        }
+        // [HttpGet]
+        // [Route("email/{email}", Name = "GetByEmail")]
+        // [AllowAnonymous]
+        // public async Task<IActionResult> GetByEmail(string email){
+        //     try{
+        //         return Ok(await _usuarioService.GetByEmail(email));
+        //     }
+        //     catch(Exception ex){
+        //         return Problem(ex.Message);
+        //         //throw;
+        //     }
+        // }
 
         [HttpPut]
         [Route("{id}")]
