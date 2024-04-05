@@ -8,6 +8,6 @@ namespace EasyControl.Api.Domain.Services.Interfaces
 {
     public interface INaturezaDeLancamentoService : IService<NaturezaDeLancamentoRequestContract, NaturezaDeLancamentoResponseContract, long>
     {
-        Task<NaturezaDeLancamentoResponseContract> GetByIdUsuario(long idUsuario);
+        Task<NaturezaDeLancamentoResponseContract> GetByIdUsuario(long id, long idUsuario);
     }
 }

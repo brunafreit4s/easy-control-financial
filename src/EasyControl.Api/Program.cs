@@ -82,7 +82,8 @@ static void ConfigurationInjectionDependency(WebApplicationBuilder builder){
     .AddScoped<TokenService>()
     .AddScoped<IUsuarioRepository, UsuarioRepository>()   
     .AddScoped<IUsuarioService, UsuarioService>()
-    .AddScoped<INaturezaDeLancamentoRepository, NaturezaDeLancamentoRepository>();
+    .AddScoped<INaturezaDeLancamentoRepository, NaturezaDeLancamentoRepository>()
+    .AddScoped<INaturezaDeLancamentoService, NaturezaDeLancamentoService>();
     #endregion
 }
 

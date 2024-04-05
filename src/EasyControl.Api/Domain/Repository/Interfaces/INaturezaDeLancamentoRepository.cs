@@ -8,6 +8,6 @@ namespace EasyControl.Api.Domain.Repository.Interfaces
 {
     public interface INaturezaDeLancamentoRepository : IRepository<NaturezaDeLancamento, long>
     {
-        Task<IEnumerable<NaturezaDeLancamento>> GetByIdUsuario(long IdUsuario);   
+        Task<IEnumerable<NaturezaDeLancamento>> GetByIdUsuario(long id, long IdUsuario);   
     }
 }

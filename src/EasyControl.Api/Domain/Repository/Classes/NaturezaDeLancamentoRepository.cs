@@ -45,10 +45,11 @@ namespace EasyControl.Api.Domain.Repository.Classes
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<NaturezaDeLancamento>> GetByIdUsuario(long IdUsuario)
+        public async Task<IEnumerable<NaturezaDeLancamento>> GetByIdUsuario(long id, long IdUsuario)
         {
             return await _context.NaturezaDeLancamento.AsNoTracking()
-                .Where(n => n.IdUsuario == IdUsuario)
+                .Where(n => n.Id == id)
+                .Where(fk => fk.IdUsuario == IdUsuario)
                 .OrderBy(n => n.Id)
                 .ToListAsync();
         }
