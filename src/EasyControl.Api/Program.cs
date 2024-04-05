@@ -21,7 +21,7 @@ builder.Services.AddSwaggerGen();
 // Add controllers to the container
 builder.Services.AddControllers();
 
-ConfigurationServices(builder);
+ConfigurationSecurityApi(builder);
 ConfigurationInjectionDependency(builder);
 
 var app = builder.Build();
@@ -68,6 +68,7 @@ static void ConfigurationInjectionDependency(WebApplicationBuilder builder){
     #region Configurações AutoMapper
     var config = new MapperConfiguration(cfg => {
         cfg.AddProfile<UsuarioProfile>();
+        cfg.AddProfile<NaturezaDeLancamentoProfile>();
     });
 
     IMapper mapper = config.CreateMapper();
@@ -80,20 +81,21 @@ static void ConfigurationInjectionDependency(WebApplicationBuilder builder){
     .AddSingleton(mapper)    
     .AddScoped<TokenService>()
     .AddScoped<IUsuarioRepository, UsuarioRepository>()   
-    .AddScoped<IUsuarioService, UsuarioService>();
+    .AddScoped<IUsuarioService, UsuarioService>()
+    .AddScoped<INaturezaDeLancamentoRepository, NaturezaDeLancamentoRepository>()
+    .AddScoped<INaturezaDeLancamentoService, NaturezaDeLancamentoService>();
     #endregion
 }
 
-// Configura o serviços da API.
-static void ConfigurationServices(WebApplicationBuilder builder)
+// Configura a Segurança de autenticação no swagger das Apis
+static void ConfigurationSecurityApi(WebApplicationBuilder builder)
 {
 
     builder.Services
-    .AddCors()
-    .AddControllers().ConfigureApiBehaviorOptions(options =>
-    {
-        options.SuppressModelStateInvalidFilter = true;
-    }).AddNewtonsoftJson();
+        .AddCors()
+        .AddControllers()
+        .ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; })
+        .AddNewtonsoftJson();
 
     builder.Services.AddSwaggerGen(c =>
     {

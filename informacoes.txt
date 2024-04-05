@@ -6,8 +6,9 @@
 		dotnet ef migrations add NOMEDAMIGRATION
 6º 	Executar as migrações na base de dados através do comando:
 		dotnet ef database update
-7º 	Criar o Repositório (Repository)
-8º 	Criar as Interfaces (Interface)
-9º 	Criar os contratos (Contract)/DTO - Data transfer object 
-10º Criar Services
-11º Criar o Controlador (Controller)
+7º 	Criar as Interfaces (Interface)
+8º 	Criar o Repositório (Repository)
+9º 	Criar os Contratos (Contract)/DTO - Data transfer object 
+10º Criar e configurar o Perfil de mapeamento (Profile)
+11º Criar Services
+12º Criar o Controlador (Controller)

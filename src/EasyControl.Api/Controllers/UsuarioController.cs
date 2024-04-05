@@ -31,20 +31,17 @@ namespace EasyControl.Api.Controllers
             }
             catch(Exception ex){
                 return Problem(ex.Message);
-                //throw;
             }
         }
 
         [HttpPost]
-        //[Authorize]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Add(UsuarioRequestContract contract){
             try{
                 return Created("", await _usuarioService.Add(contract, 0));
             }
             catch(Exception ex){
                 return Problem(ex.Message);
-                //throw;
             }
         }
 
@@ -56,7 +53,6 @@ namespace EasyControl.Api.Controllers
             }
             catch(Exception ex){
                 return Problem(ex.Message);
-                //throw;
             }
         }
 
@@ -69,7 +65,6 @@ namespace EasyControl.Api.Controllers
             }
             catch(Exception ex){
                 return Problem(ex.Message);
-                //throw;
             }
         }
 
@@ -82,7 +77,6 @@ namespace EasyControl.Api.Controllers
         //     }
         //     catch(Exception ex){
         //         return Problem(ex.Message);
-        //         //throw;
         //     }
         // }
 
@@ -95,7 +89,6 @@ namespace EasyControl.Api.Controllers
             }
             catch(Exception ex){
                 return Problem(ex.Message);
-                //throw;
             }
         }
 
@@ -109,7 +102,6 @@ namespace EasyControl.Api.Controllers
             }
             catch(Exception ex){
                 return Problem(ex.Message);
-                //throw;
             }
         }
     }

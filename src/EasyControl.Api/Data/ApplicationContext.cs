@@ -8,11 +8,13 @@ namespace EasyControl.Api.Data
     {
         // 3º - Configuração - Criação do Construtor - Serve para definir como o Entity deve controlar as entidades
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<NaturezaDeLancamento> NaturezaDeLancamento { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options){ }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UsuarioMap());
+            modelBuilder.ApplyConfiguration(new NaturezaDeLancamentoMap());
             //base.OnModelCreating(modelBuilder);
         }
     }
